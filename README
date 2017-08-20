@@ -40,7 +40,7 @@ ssh-keygen -t rsa -C "youremail@example.com"
 #恢复分支且删除        git stash pop
 
 #指定本地分支和远程分支的链接
-#git branch --set-upstream dev origin/dev
+#git branch --set-upstream-to origin/dev
 #把最新的提交从远程抓取下来
 #git pull
 #查看远程信息          git remote -v
