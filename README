@@ -1,0 +1,53 @@
+#git 命令说明文档
+
+#首先,可输入git看是否安装git
+#在ubuntu上可通过sudo apt-get install git安装git
+#安装完后需要git config --global user.name "Your name"
+             git config --global user.email"Your email"绑定你的用户名和email
+
+#创建版本库            git init
+#讲文件添加到暂存区    git add <filename>
+#讲文件提交            git commit -m "instruction"
+
+#查看工作区状态        git status
+#查看工作修改内容      git diff <filename>
+#回退版本              git reset --hard HEAD^
+#查看提交历史          git log
+#查看命令历史          git reflog
+
+#丢弃工作区的修改      git checkout -- file
+#丢弃暂存区修改        git reset HEAD file
+#删除版本库文件              git rm file
+
+#创建SSH key
+ssh-keygen -t rsa -C "youremail@example.com"
+~/.ssh目录下会出现id_rsa.pub 将其内容复制到github上
+
+#本地库内容推送到远程库
+#git push origin master
+#从远程库克隆一个本地库
+#git clone git@github.com:michaelliao/gitskills.git
+
+#创建分支              git branch dev
+#切换分支              git checkout dev
+#查看当前分支          git branch
+#合并分支到当前分支    git merge dev
+#删除分支              git branch -d dev
+
+#存储当前工作现场      git stash
+#查看工作现场保持位置  git stash list 
+#恢复分支不删除        git stash apply /drop
+#恢复分支且删除        git stash pop
+
+#指定本地分支和远程分支的链接
+#git branch --set-upstream dev origin/dev
+#把最新的提交从远程抓取下来
+#git pull
+#查看远程信息          git remote -v
+
+#打一个新标签          git tag v1.0
+#查看所有标签          git tag
+#给历史提交打标签      git tag v0.9 322015
+#查看标签信息          git show v0.9
+#删除标签              git tag -d v0.1
+#推送标签到远程        git push origin v1.0
