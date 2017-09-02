@@ -1,7 +1,7 @@
 .arch armv4
 .global _start
 
-.equ REG_FIFO, 0x01d00020
+.equ REG_FIFO, 0x50000020
 
 .text
 .align 2
