@@ -8,24 +8,35 @@
 .equ UND_MOD,       0X1B
 .equ SYS_MOD,       0X1F
 
-.equ MEM_SIZE,      0x80000
-.equ TEXT_BASE,     0x30000000
+.equ MEM_SIZE,      0x2000
+.equ TEXT_BASE,     0x40000000
 .equ _SVC_STACK,    (MEM_SIZE+TEXT_BASE-4)
-.equ _IRQ_STACK,    (_SVC_STACK-0X400)
-.equ _FIQ_STACK,    (_IRQ_STACK-0X400)
-.equ _ABT_STACK,    (_FIQ_STACK-0X400)
-.equ _UND_STACK,    (_ABT_STACK-0X400)
-.equ _SYS_STACK,    (_UND_STACK-0X400)
+.equ _IRQ_STACK,    (_SVC_STACK-0X100)
+.equ _FIQ_STACK,    (_IRQ_STACK-0X100)
+.equ _ABT_STACK,    (_FIQ_STACK-0X100)
+.equ _UND_STACK,    (_ABT_STACK-0X100)
+.equ _SYS_STACK,    (_UND_STACK-0X100)
 
 .text
 .code  32
 .global __vector_reset
 
+.extern _start
 .extern plat_boot
 .extern __bss_start__
 .extern __bss_end__
 
 __vector_reset:
+
+/*开icache*/
+#ifdef SYS_ICACHE_OFF
+    bic r0,r0,#0x00001000
+#else
+    orr r0,r0,#0x00001000
+#endif
+    mcr p15,0,r0,c1,c0,0
+
+/*初始化栈*/
     msr cpsr_c,#(DISABLE_IRQ|DISABLE_FIQ|SVC_MOD)
     ldr sp,=_SVC_STACK
 

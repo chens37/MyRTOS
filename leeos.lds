@@ -1,20 +1,16 @@
 ENTRY(_start)
 SECTIONS
 {
-    . = 0x00000000;
+    . = 0x30000000;
     .text : 
     {
-        *(.startup)
+        startup.o
         *(.text)
     }
-    
-    . = ALIGN(32);
     .data :
     {
         *(.data)
     }
-
-    . = ALIGN(32);
     __bss_start__ = .;
     .bss :
     {
