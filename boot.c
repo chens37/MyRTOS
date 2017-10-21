@@ -1,6 +1,20 @@
-//#include "stdio.h"
+#include "include/stdio.h"
 #include "S3C2451.h"
+#include "uart.h"
 
+#define UFSTAT0         ( *((volatile unsigned long *)0x50000018) )
+#define Startup_MDIV            400
+#define Startup_PDIV            3
+#define Startup_SDIV            1
+#define Startup_MPLLSTOP        0
+
+#define MPLL_VAL                ((Startup_MPLLSTOP<<24)|(Startup_MDIV<<14)|(Startup_PDIV<<5)|(Startup_SDIV))
+
+#define Startup_ARMCLKdiv       1
+#define Startup_PREdiv          0x2
+#define Startup_HCLKdiv         0x1
+#define Startup_PCLKdiv         1
+#define CLK_DIV_VAL             ((Startup_ARMCLKdiv<<9)|(Startup_PREdiv<<4)|(Startup_PCLKdiv<<2)|(Startup_HCLKdiv))
 
 typedef void (*init_func)(void);
 
@@ -41,23 +55,27 @@ void delay(void)
 
 }
 
+void puchar(unsigned char c)
+{
+    while(UFSTAT0 & (1<<14));
+    UTXH0 = c;
+
+}
+
 void plat_boot(void)
 {
    local_init_boot(init);
 //    boot_start();
+   // uart_init();
     
     GPBSEL = 0;
     GPACON = 0;
     GPBCON = ( 0x5<<(2*5) );
-    
+  
+    printf("hello world\n");
     while(1)
     {
-        UTXH0 = 'A';
-        GPADAT = 0;
-        GPBDAT = 0;
-        delay();
-        GPADAT = (0x3<<25);
-        GPBDAT = (0x3<<5);
+//        printf("hello world\n\r");
         delay();
     }
 }
@@ -68,42 +86,66 @@ void arm920t_init_mmu(void)
 }
 void s3c2440_init_clock(void)
 {
-    /*MPLL 534MHz*/
+    /*MPLL 534MHz*
     MPLLCON |= (0x1<<0);
-    MPLLCON |= (0x2<<5);
-    MPLLCON |= (0x10b<<14);
-    MPLLCON &= ~(0x1<<24);
-    /*EPLL 96MHz*/
-    EPLLCON |= (0x20 << 16);
-    EPLLCON &= ~(0x1<<24);
+    MPLLCON &= ~(0x6<<5);
+    MPLLCON |= (0x3<<5);
+    MPLLCON &= ~(0x215<<14);
+    MPLLCON |= (400<<14);
+    MPLLCON &= ~(0x1<<24);*/
 
-    CLKDIV0 |= (0X1);
-    CLKDIV0 |= (0X1<<2);
-    CLKDIV0 |= (0X1<<3);
-    CLKDIV0 |= (0X1<<4);
-    /*usb 48MHz*/
-    CLKDIV1 |= (0X1<<4);
-    CLKSRC  |= (0X1<<6);
-    CLKSRC  |= (0X1<<4);
+    //MPLLCON = ((0x3<<5)|(400<<14)|(0x1));
+
+    /*EPLL 96MHz*/
+    //EPLLCON |= (0x20 << 16);
+    //EPLLCON &= ~(0x1<<24);
+
+    /*选择MPLL为时钟源*/
+    //CLKSRC  |= (0X1<<4);
     //LOCKCON0 = 0xffff;
+    //CLKDIV0 = (CLKDIV0&~(0x1E37));
+/*    CLKDIV0 |= (0X1);
+    CLKDIV0 |= (0X1<<2);
+    CLKDIV0 |= (0X2<<4);
+    CLKDIV0 |= (0x1<<9);*/
+
+    CLKDIV0 = (CLKDIV0&~(0x1E37)) | CLK_DIV_VAL;
+
+    LOCKCON0 = 0xffff;
+    MPLLCON = MPLL_VAL;
+    CLKSRC  |= (1<<4);
 }
 
 void s3c2440_init_memory(void)
 {
-    BANKCON |= (0x1)
+   // BANKCON |= (0x1)
 }
 void s3c2440_init_irq(void)
 {
+   GPFCON &= ~(0xff);
+   GPFCON |= 0xaa;
+
+   EXTINT0 &= ~(0XFFFF);
+   EXTINT0 |= (0XFFFF);
+
+   SRCPND = 0X0F;
+   INTPND = 0X0F;
 }
 void s3c2440_init_io(void)
 {
-    /*****UART******/
-    ULCON0  = 0x03;  //8bit 1stop no parity
-    UCON0   = 0xc05;
-    UBRDIV0 = 52;    //115200Hz
-    UDIVSLOT0 = 0X0080;
+    GPHCON = (GPHCON & ~0XFFFF) | 0XAAAA;
 
-    GPHCON |= (0xa<<0);
+    /*****UART******/
+    ULCON0  = 0x3;  //8bit 1stop no parity
+    UCON0   = 0x5;
+    
+    UFCON0 = 0X01;
+    UMCON0 = 0;
+    
+    UBRDIV0 = 35;    //115200Hz
+    UDIVSLOT0 = 0X1;
+
+   // GPHCON |= (0xa<<0);
     //GPHUDP 
     
 }

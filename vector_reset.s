@@ -36,7 +36,7 @@ __vector_reset:
 #endif
     mcr p15,0,r0,c1,c0,0
 
-/*初始化栈*/
+/*初始化栈*
     msr cpsr_c,#(DISABLE_IRQ|DISABLE_FIQ|SVC_MOD)
     ldr sp,=_SVC_STACK
 
@@ -52,8 +52,8 @@ __vector_reset:
     msr cpsr_c,#(DISABLE_IRQ|DISABLE_FIQ|UND_MOD)
     ldr sp,=_UND_STACK
 
-    msr cpsr_c,#(DISABLE_IRQ|DISABLE_FIQ|SYS_MOD)
-    ldr sp,=_SYS_STACK
+    msr cpsr_c,#(DISABLE_IRQ|DISABLE_FIQ|SYS_MOD)*/
+    ldr sp,=0x40002000
 
 _clear_bss:
     ldr r1,_bss_start_
@@ -61,7 +61,6 @@ _clear_bss:
     mov r2,#0x0
 
 lb:
-    b plat_boot
     cmp r1,r3
     beq _main
     str r2,[r1],#0x4

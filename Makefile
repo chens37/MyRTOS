@@ -2,6 +2,10 @@ obj= vector_reset.o
 obj+= startup.o
 obj+= boot.o
 obj+= abnormal.o
+obj+= sdram.o
+obj+= uart.o
+obj+= irq.o
+obj+= lib/libc.a
 
 lds= leeos.lds
 
@@ -11,6 +15,16 @@ aslags = arm-elf-ld -T $(lds)
 biny   = arm-elf-objcopy -O binary
 dump   = arm-elf-objdump
 
+CC     = arm-elf-gcc-4.4.3
+LD     = arm-elf-ld
+AR     = arm-elf-ar
+INCLUDEDIR := $(shell pwd)/include
+CFLAGS     := -Wall -Os -fno-builtin
+CPPFLAGS   := -nostdinc -I$(INCLUDEDIR)
+
+export  CC LD AR INCLUDEDIR CFLAGS CPPFLAGS
+
+
 leeos.bin : leeos
 	$(biny) leeos leeos.bin
 	$(dump) -D leeos > leeos.dis
@@ -19,15 +33,15 @@ leeos.bin : leeos
 leeos : $(obj)
 	$(aslags) $(obj) -o leeos
 
-boot.o : boot.c
-	$(cflags) -c boot.c
+.PHONY : lib/libc.a
+lib/libc.a:
+	cd lib;make;cd ..
 
-startup.o : startup.s
-	$(cflags) -c startup.s
-vector_reset.o : vector_reset.s
-	$(cflags) -c vector_reset.s
-abnormal.o : abnormal.s
-	$(cflags) -c abnormal.s
+%.o:%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
+%.o:%.s
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
 
 clean:
+	make clean -C lib
 	rm -f *.o *.dis leeos leeos.bin

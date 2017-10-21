@@ -81,14 +81,13 @@
 #define UFCON1      (*(volatile unsigned char *)(0x50004008))
 #define UFCON2      (*(volatile unsigned char *)(0x50008008))
 #define UFCON3      (*(volatile unsigned char *)(0x5000C008))
-#define UMCON0      (*(volatile unsigned char *)(0x50000000))
+#define UMCON0      (*(volatile unsigned char *)(0x5000000C))
 #define UMCON1      (*(volatile unsigned char *)(0x5000400C))
 #define UMCON2      (*(volatile unsigned char *)(0x5000800C))
 #define UTRSTAT0    (*(volatile unsigned char *)(0x50000010))
 #define UTRSTAT1    (*(volatile unsigned char *)(0x50004010))
 #define UTRSTAT2    (*(volatile unsigned char *)(0x50008010))
 #define UTRSTAT3    (*(volatile unsigned char *)(0x5000C010))
-
 #define UTXH0       (*(volatile unsigned char *)(0x50000020))
 #define UTXH1       (*(volatile unsigned char *)(0x50004020))
 #define UTXH2       (*(volatile unsigned char *)(0x50008020))
@@ -102,10 +101,10 @@
 #define UBRDIV1    (*(volatile unsigned short *)(0x50004028))
 #define UBRDIV2    (*(volatile unsigned short *)(0x50008028))
 #define UBRDIV3    (*(volatile unsigned short *)(0x5000C028))
-#define UDIVSLOT0  (*(volatile unsigned char *)(0x5000002C))
-#define UDIVSLOT1  (*(volatile unsigned char *)(0x5000402C))
-#define UDIVSLOT2  (*(volatile unsigned char *)(0x5000802C))
-#define UDIVSLOT3  (*(volatile unsigned char *)(0x5000C02C))
+#define UDIVSLOT0  (*(volatile unsigned short *)(0x5000002C))
+#define UDIVSLOT1  (*(volatile unsigned short *)(0x5000402C))
+#define UDIVSLOT2  (*(volatile unsigned short *)(0x5000802C))
+#define UDIVSLOT3  (*(volatile unsigned short *)(0x5000C02C))
 /*SDRAM*/
 #define BANKCFG     (*(volatile unsigned long *)(0x48000000))
 #define BANkCON1    (*(volatile unsigned long *)(0x48000004))
@@ -113,6 +112,14 @@
 #define BANKCON3    (*(volatile unsigned long *)(0x4800000c))
 #define REFRESH     (*(volatile unsigned long *)(0x48000010))
 #define TIMEOUT     (*(volatile unsigned long *)(0x48000014))
+/*IRQ*/
+#define EXTINT0      (*(volatile unsigned long *)(0x56000088))
+#define EINTPEND     (*(volatile unsigned long *)(0x560000A8))
+#define SRCPND       (*(volatile unsigned long *)(0x4A000000))
+#define INTMOD       (*(volatile unsigned long *)(0x4A000004))
+#define INTMSK       (*(volatile unsigned long *)(0x4A000008))
+#define INTPND       (*(volatile unsigned long *)(0x4A000010))
+#define INTOFFSET    (*(volatile unsigned long *)(0x4A000014))
 
 
 

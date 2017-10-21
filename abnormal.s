@@ -5,6 +5,7 @@
 .global __vector_reserved
 .global __vector_data_abort
 
+.extern do_irq
 
 .text
 .code 32
@@ -14,7 +15,11 @@ __vector_undefined:
 __vector_swi:
     nop
 __vector_irq:
-    nop
+    ldr sp,=(0x31000000+0x100000)
+    sub lr,lr,#4
+    stmdb sp!,{r0-r12,lr}
+    bl do_irq
+    ldmia sp!,{r0-r12,pc}^
 __vector_fiq:
     nop
 __vector_reserved:
