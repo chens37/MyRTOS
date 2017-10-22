@@ -2,7 +2,6 @@
 
 
 .global _start
-.extern _vector_reset
 .extern __vector_reset
 .extern __vector_undefined
 .extern __vector_swi
@@ -25,8 +24,8 @@ b _vector_undefined
 b _vector_swi
 b _vector_reserved
 b _vector_data_abort
-
-ldr pc, _vector_irq
+b _vector_data_abort
+ldr pc,_vector_irq
 b _vector_fiq
 
 _temp:
@@ -38,9 +37,22 @@ str r1,[r0]
 /*内存初始化*/
 adr r0, sdram_bank_set_val
 bl sdr_ctrl_asm_init
+/*
+adr r0,_start
+ldr r1,=0x00000000
+ldr r2,=0x00000020
+cmp r0,r1
+beq code
 
+loop:
+    ldr r3,[r0],#4
+    str r3,[r1],#4
+    cmp r1,r2
+    bne loop
 
-/*代码重定位
+code:
+*/
+/*代码重定位*/
 adr r0,_start
 ldr r1,=_start
 ldr r2,=__bss_start__
@@ -52,15 +64,15 @@ copy_loop:
     str r3,[r1],#4
     cmp r1,r2
     bne copy_loop
-*/
+
 Next:
-    ldr pc, _vector_reset /*程序已经过虚拟内存映射，ldr，pc暂时无法使用*/
+    ldr pc,_vector_reset
 #ldr  pc,=_vector_reset
-#ldr pc,_vector_undefined
-#ldr pc,_vector_swi
-#ldr pc,_vector_irq
-#ldr pc,_vector_fiq
-#ldr pc,_vector_reserved
+ldr pc,_vector_undefined
+ldr pc,_vector_swi
+ldr pc,_vector_irq
+ldr pc,_vector_fiq
+ldr pc,_vector_reserved
 #ldr pc,_vector_data_abort
 
 _vector_reset:      .word __vector_reset

@@ -72,18 +72,14 @@ void plat_boot(void)
     GPACON = 0;
     GPBCON = ( 0x5<<(2*5) );
   
-    printf("hello world\n");
+    printf("hello world\n\r");
     while(1)
     {
-//        printf("hello world\n\r");
+ //       printf("hello world\n\r");
         delay();
     }
 }
 
-void arm920t_init_mmu(void)
-{
-//    printf("hello\n");
-}
 void s3c2440_init_clock(void)
 {
     /*MPLL 534MHz*
@@ -126,10 +122,13 @@ void s3c2440_init_irq(void)
    GPFCON |= 0xaa;
 
    EXTINT0 &= ~(0XFFFF);
-   EXTINT0 |= (0XFFFF);
+   EXTINT0 |= (0X7777);
 
-   SRCPND = 0X0F;
-   INTPND = 0X0F;
+   SRCPND = 0X1F;
+   INTPND = 0X1F;
+   INTMSK &= ~(0xf);
+
+   printf("irq init OK\n\r");
 }
 void s3c2440_init_io(void)
 {

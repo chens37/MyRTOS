@@ -5,6 +5,7 @@ obj+= abnormal.o
 obj+= sdram.o
 obj+= uart.o
 obj+= irq.o
+obj+= mmu.o
 obj+= lib/libc.a
 
 lds= leeos.lds

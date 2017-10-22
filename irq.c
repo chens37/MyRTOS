@@ -5,6 +5,7 @@ void do_irq(void)
 {
     int i;
 
+    printf("hello\n\r");
     for(i = 0;i < 4;i++)
     {
         if(INTPND & (1<<i))

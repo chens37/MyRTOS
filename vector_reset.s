@@ -51,8 +51,8 @@ __vector_reset:
 
     msr cpsr_c,#(DISABLE_IRQ|DISABLE_FIQ|UND_MOD)
     ldr sp,=_UND_STACK
-
-    msr cpsr_c,#(DISABLE_IRQ|DISABLE_FIQ|SYS_MOD)*/
+*/
+    msr cpsr_c,#0x53
     ldr sp,=0x40002000
 
 _clear_bss:
